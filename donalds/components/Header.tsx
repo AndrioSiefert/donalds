@@ -1,28 +1,15 @@
-// components/Header.tsx
-
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-
-// Mock para autenticação
-const user = {
-    name: 'João da Silva',
-    email: 'joao@email.com',
-    image: null,
-};
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function Header() {
     const router = useRouter();
+    const { user, logout, loading } = useAuth(); // <-- peguei também o loading
 
-    const handleLogin = () => {
-        // Navega para tela de login
-        // router.push('/login');
-    };
-
-    const handleLogout = () => {
-        // Implementar logout
-        console.log('Logout...');
-    };
+    if (loading) {
+        return null; // ainda carregando, não mostra o header
+    }
 
     return (
         <View style={styles.container}>
@@ -31,13 +18,15 @@ export default function Header() {
             <View style={styles.right}>
                 {user ? (
                     <>
-                        <Text style={styles.userName}>Olá, {user.name.split(' ')[0]}</Text>
-                        <TouchableOpacity onPress={handleLogout}>
+                        <Text style={styles.userName} numberOfLines={1}>
+                            Olá, {user.name?.split(' ')[0]}
+                        </Text>
+                        <TouchableOpacity onPress={logout}>
                             <Text style={styles.logout}>Sair</Text>
                         </TouchableOpacity>
                     </>
                 ) : (
-                    <TouchableOpacity onPress={handleLogin}>
+                    <TouchableOpacity onPress={() => router.push('/login')}>
                         <Text style={styles.login}>Entrar</Text>
                     </TouchableOpacity>
                 )}
@@ -63,6 +52,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 10,
+        maxWidth: 180,
     },
     userName: {
         fontSize: 16,

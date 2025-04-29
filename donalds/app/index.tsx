@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Text, StyleSheet, ScrollView, Image, useWindowDimensions } from 'react-native';
 
 import Header from '@/components/Header';
 import Search from '@/components/Search';
@@ -8,6 +7,7 @@ import CategoryList from '@/components/CategoryList';
 import PromoBanner from '@/components/PromoBanner';
 import ProductList from '@/components/ProductList';
 import RestaurantList from '@/components/RestaurantList';
+import { useAuth } from './context/AuthContext';
 
 interface Product {
     id: string;
@@ -23,6 +23,7 @@ export default function HomeScreen() {
     const [products, setProducts] = useState<Product[]>([]);
     const { width } = useWindowDimensions();
     const isSmallScreen = width < 400;
+    const { user } = useAuth();
 
     useEffect(() => {
         fetch('http://localhost:3000/products') // Substitua pela URL real
@@ -34,6 +35,9 @@ export default function HomeScreen() {
     return (
         <ScrollView>
             <Header />
+
+            {user && <Text style={styles.welcome}>Bem-vindo de volta, {user.name?.split(' ')[0]}!</Text>}
+
             <View style={[styles.bannerContainer, isSmallScreen && styles.bannerStack]}>
                 <View style={styles.textContainer}>
                     <Text style={styles.title}>Está com fome?</Text>
@@ -62,6 +66,14 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+    welcome: {
+        fontSize: 16,
+        fontWeight: '500',
+        marginTop: 16,
+        marginBottom: -8,
+        paddingHorizontal: 24,
+        color: '#444',
+    },
     bannerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
