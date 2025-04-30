@@ -49,9 +49,9 @@ export default function HomeScreen() {
                     </View>
                 </View>
 
-                {!isSmallScreen && (
+                {/* {!isSmallScreen && (
                     <Image source={require('../assets/images/logo.png')} style={styles.image} resizeMode='contain' />
-                )}
+                )} */}
             </View>
 
             <View style={styles.section}>
@@ -69,8 +69,8 @@ const styles = StyleSheet.create({
     welcome: {
         fontSize: 16,
         fontWeight: '500',
-        marginTop: 16,
-        marginBottom: -8,
+        marginTop: 2,
+        marginBottom: 1,
         paddingHorizontal: 24,
         color: '#444',
     },
@@ -102,7 +102,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         borderRadius: 8,
         padding: 12,
-        marginTop: 8,
+        marginTop: 5,
+        marginBottom: 5
+
     },
     image: {
         width: 150,

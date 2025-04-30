@@ -5,10 +5,10 @@ import { useAuth } from '@/app/context/AuthContext';
 
 export default function Header() {
     const router = useRouter();
-    const { user, logout, loading } = useAuth(); // <-- peguei também o loading
+    const { user, logout, loading } = useAuth(); 
 
     if (loading) {
-        return null; // ainda carregando, não mostra o header
+        return null; 
     }
 
     return (
