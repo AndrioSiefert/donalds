@@ -4,7 +4,6 @@ import { PrismaClient } from '@prisma/client';
 const router = Router();
 const prisma = new PrismaClient();
 
-// Buscar todos os restaurantes
 router.get('/', async (_req, res) => {
     try {
         const restaurants = await prisma.restaurant.findMany({
@@ -23,7 +22,6 @@ router.get('/', async (_req, res) => {
     }
 });
 
-// Buscar um restaurante pelo ID e seus produtos
 router.get('/:id', (async (req, res) => {
     const { id } = req.params;
     try {

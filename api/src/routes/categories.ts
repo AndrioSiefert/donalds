@@ -4,7 +4,6 @@ import { PrismaClient } from '@prisma/client';
 const router = Router();
 const prisma = new PrismaClient();
 
-// Buscar todas as categorias
 router.get('/', async (_req, res) => {
     try {
         const categories = await prisma.category.findMany({
@@ -21,7 +20,6 @@ router.get('/', async (_req, res) => {
     }
 });
 
-// Buscar produtos de uma categoria específica
 router.get('/:id/products', (async (req, res) => {
     const { id } = req.params;
 
