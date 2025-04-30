@@ -1,9 +1,7 @@
-// app/restaurants/[id].tsx
-
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { View, Text, Image, StyleSheet, ActivityIndicator, ScrollView, FlatList } from 'react-native';
 import { useEffect, useState } from 'react';
-import ProductItem from '@/components/ProductItem'; // Reutilizamos o ProductItem
+import ProductItem from '@/components/ProductItem'; 
 
 interface Restaurant {
     id: string;

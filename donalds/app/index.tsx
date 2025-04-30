@@ -26,7 +26,7 @@ export default function HomeScreen() {
     const { user } = useAuth();
 
     useEffect(() => {
-        fetch('http://localhost:3000/products') // Substitua pela URL real
+        fetch('http://localhost:3000/products') 
             .then((res) => res.json())
             .then((data) => setProducts(data))
             .catch((err) => console.error('Erro ao buscar produtos:', err));

@@ -1,5 +1,3 @@
-// app/categories/[id]/products.tsx
-
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { View, Text, ActivityIndicator, FlatList, StyleSheet, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
@@ -77,7 +75,7 @@ export default function CategoryProducts() {
                 contentContainerStyle={styles.productsList}
                 columnWrapperStyle={{ gap: 16 }}
                 ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-                scrollEnabled={false} // Scroll só do ScrollView, não do FlatList
+                scrollEnabled={false} 
             />
         </ScrollView>
     );

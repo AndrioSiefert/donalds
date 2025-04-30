@@ -16,7 +16,7 @@ export default function LoginScreen() {
         }
 
         await login(email, password);
-        router.push('/'); // volta para home após login
+        router.push('/'); 
     };
 
     return (
