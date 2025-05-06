@@ -1,38 +1,76 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { View, Text, Image, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
+import { View, ActivityIndicator, ScrollView, StyleSheet, Text, Modal } from 'react-native';
 
-interface Product {
+import ProductImage from './components/ProductImage';
+import ProductDetails from './components/ProductDetails';
+import ProductList from '@/components/ProductList';
+import Cart from '@/components/Cart';
+
+type Product = {
     id: string;
     name: string;
-    description?: string;
+    description: string;
     imageUrl: string;
     price: number;
-    discountPercentage?: number;
-    restaurant?: {
+    discountPercentage: number | null;
+    restaurantId: string;
+    restaurant: {
+        id: string;
         name: string;
+        imageUrl: string;
+        deliveryFee: number;
+        deliveryTimeMinutes: number;
     };
-}
+};
 
-export default function ProductDetail() {
+export default function ProductDetailPage() {
     const { id } = useLocalSearchParams<{ id: string }>();
-    const [product, setProduct] = useState<Product | null>(null);
-    const [loading, setLoading] = useState(true);
     const router = useRouter();
+
+    const [product, setProduct] = useState<Product | null>(null);
+    const [complementaryProducts, setComplementaryProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
     useEffect(() => {
         if (!id) return;
 
-        fetch(`http://localhost:3000/products/${id}`)
-            .then((res) => res.json())
-            .then((data) => {
+        const fetchProduct = async () => {
+            try {
+                const res = await fetch(`http://localhost:3000/products/${id}`);
+                const data = await res.json();
+                if (!data?.id) throw new Error('Produto não encontrado');
                 setProduct(data);
-            })
-            .catch((err) => {
-                console.error('Erro ao buscar produto:', err);
+
+                const compRes = await fetch(
+                    `http://localhost:3000/products/complementary?restaurantId=${data.restaurant.id}`,
+                );
+
+                if (!compRes.ok) {
+                    console.warn('Erro ao buscar complementares:', await compRes.text());
+                    setComplementaryProducts([]);
+                    return;
+                }
+
+                const compData = await compRes.json();
+
+                if (!Array.isArray(compData)) {
+                    console.warn('Resposta inesperada de complementares:', compData);
+                    setComplementaryProducts([]);
+                    return;
+                }
+
+                setComplementaryProducts(compData.sort(() => Math.random() - 0.74));
+            } catch (err) {
+                console.error('Erro no carregamento do produto:', err);
                 router.back();
-            })
-            .finally(() => setLoading(false));
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProduct();
     }, [id]);
 
     if (loading) {
@@ -52,17 +90,25 @@ export default function ProductDetail() {
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <Image source={{ uri: product.imageUrl }} style={styles.image} />
-            <Text style={styles.name}>{product.name}</Text>
-            <Text style={styles.price}>
-                {product.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-            </Text>
+        <>
+            <ScrollView contentContainerStyle={styles.container}>
+                <ProductImage product={product} />
 
-            {product.restaurant?.name && <Text style={styles.restaurant}>Restaurante: {product.restaurant.name}</Text>}
+                <ProductDetails
+                    product={product}
+                    complementaryProducts={complementaryProducts}
+                    onOpenCart={() => setIsCartOpen(true)}
+                />
 
-            {product.description && <Text style={styles.description}>{product.description}</Text>}
-        </ScrollView>
+                <View style={{ marginTop: 32 }}>
+                    <ProductList products={complementaryProducts} />
+                </View>
+            </ScrollView>
+
+            <Modal visible={isCartOpen} animationType='slide'>
+                <Cart setIsOpen={setIsCartOpen} />
+            </Modal>
+        </>
     );
 }
 
@@ -73,36 +119,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     container: {
-        padding: 20,
-        alignItems: 'center',
-    },
-    image: {
-        width: '100%',
-        height: 300,
-        borderRadius: 10,
-        marginBottom: 20,
-    },
-    name: {
-        fontSize: 24,
-        fontWeight: '700',
-        textAlign: 'center',
-        marginBottom: 10,
-    },
-    price: {
-        fontSize: 20,
-        color: '#EA1D2C',
-        fontWeight: '600',
-        marginBottom: 10,
-    },
-    restaurant: {
-        fontSize: 16,
-        color: 'gray',
-        marginBottom: 10,
-    },
-    description: {
-        fontSize: 16,
-        textAlign: 'justify',
-        marginTop: 10,
-        color: '#555',
+        paddingBottom: 24,
     },
 });
