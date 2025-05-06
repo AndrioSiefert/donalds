@@ -30,7 +30,11 @@ router.get('/:id', (async (req, res) => {
             include: {
                 restaurant: {
                     select: {
+                        id: true,
                         name: true,
+                        imageUrl: true,
+                        deliveryFee: true,
+                        deliveryTimeMinutes: true,
                     },
                 },
             },
@@ -44,6 +48,43 @@ router.get('/:id', (async (req, res) => {
     } catch (error) {
         console.error('Erro ao buscar produto:', error);
         res.status(500).json({ error: 'Erro ao buscar produto.' });
+    }
+}) as RequestHandler);
+
+router.get('/complementary', (async (req, res) => {
+    const { restaurantId } = req.query;
+
+    if (!restaurantId || typeof restaurantId !== 'string') {
+        return res.status(400).json({ error: 'restaurantId é obrigatório' });
+    }
+
+    try {
+        const complementaryProducts = await prisma.product.findMany({
+            where: {
+                restaurantId,
+                category: {
+                    name: {
+                        in: ['Sucos', 'Sobremesas'],
+                    },
+                },
+            },
+            include: {
+                restaurant: {
+                    select: {
+                        id: true,
+                        name: true,
+                        imageUrl: true,
+                        deliveryFee: true,
+                        deliveryTimeMinutes: true,
+                    },
+                },
+            },
+        });
+
+        res.json(complementaryProducts);
+    } catch (error) {
+        console.error('Erro ao buscar complementares:', error);
+        res.status(500).json({ error: 'Erro ao buscar complementares.' });
     }
 }) as RequestHandler);
 
