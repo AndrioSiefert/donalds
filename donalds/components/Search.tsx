@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { View, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 
@@ -7,26 +7,36 @@ interface SearchProps {
     isHomePage?: boolean;
 }
 
-export default function Search({ isHomePage }: SearchProps) {
-    const [search, setSearch] = useState('');
+export function Search({ isHomePage }: SearchProps) {
     const router = useRouter();
+    const [search, setSearch] = useState('');
 
-    const handleSubmit = () => {
-        if (!search) return;
-        router.push(`/restaurants?search=${encodeURIComponent(search)}`);
+    const handleSearchSubmit = () => {
+        const trimmedSearch = search.trim();
+
+        if (!trimmedSearch) {
+            Alert.alert('Erro', 'Por favor, digite um nome de restaurante.');
+            return;
+        }
+
+        router.push(`/restaurants/search/${encodeURIComponent(trimmedSearch)}`);
     };
 
     return (
         <View style={styles.container}>
             <TextInput
-                style={[styles.input, isHomePage ? styles.inputHome : styles.inputOther]}
-                placeholder='Buscar restaurantes'
+                placeholder='Digite o nome do restaurante'
                 value={search}
                 onChangeText={setSearch}
+                style={styles.input}
+                placeholderTextColor='#999'
                 returnKeyType='search'
-                onSubmitEditing={handleSubmit}
+                onSubmitEditing={handleSearchSubmit}
             />
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <TouchableOpacity
+                onPress={handleSearchSubmit}
+                style={[styles.button, isHomePage ? styles.homeButton : styles.defaultButton]}
+            >
                 <Feather name='search' size={20} color='#fff' />
             </TouchableOpacity>
         </View>
@@ -36,26 +46,30 @@ export default function Search({ isHomePage }: SearchProps) {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        gap: 10,
         width: '100%',
+        gap: 8,
         alignItems: 'center',
     },
     input: {
         flex: 1,
+        borderWidth: 1,
+        borderColor: '#ddd',
         borderRadius: 8,
         paddingHorizontal: 12,
-        paddingVertical: 10,
-        backgroundColor: '#f0f0f0',
-    },
-    inputHome: {
-        backgroundColor: '#fff',
-    },
-    inputOther: {
+        height: 48,
         backgroundColor: '#fff',
     },
     button: {
-        backgroundColor: '#EA1D2C',
-        padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
         borderRadius: 8,
+        padding: 12,
+        height: 48,
+    },
+    homeButton: {
+        backgroundColor: '#FFB100',
+    },
+    defaultButton: {
+        backgroundColor: '#EA1D2C',
     },
 });

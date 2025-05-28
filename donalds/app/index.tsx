@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, useWindowDimensions } from 'react-native';
 
 import Header from '@/components/Header';
-import Search from '@/components/Search';
+
 import CategoryList from '@/components/CategoryList';
 import PromoBanner from '@/components/PromoBanner';
 import ProductList from '@/components/ProductList';
 import RestaurantList from '@/components/RestaurantList';
 import { useAuth } from './context/AuthContext';
+import { Search } from '@/components/Search';
 
 interface Product {
     id: string;
@@ -26,7 +27,7 @@ export default function HomeScreen() {
     const { user } = useAuth();
 
     useEffect(() => {
-        fetch('http://localhost:3000/products') 
+        fetch('http://localhost:3000/products')
             .then((res) => res.json())
             .then((data) => setProducts(data))
             .catch((err) => console.error('Erro ao buscar produtos:', err));
@@ -103,8 +104,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 12,
         marginTop: 5,
-        marginBottom: 5
-
+        marginBottom: 5,
     },
     image: {
         width: 150,
