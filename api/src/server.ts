@@ -5,6 +5,9 @@ import restaurantsRoutes from './routes/restaurants';
 import categoriesRoutes from './routes/categories';
 import authRoutes from './routes/auth';
 import orderRoutes from './routes/orders';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 
