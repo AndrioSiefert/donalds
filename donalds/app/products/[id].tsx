@@ -1,6 +1,7 @@
+import React from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, ActivityIndicator, ScrollView, StyleSheet, Text, Modal } from 'react-native';
+import { View, ActivityIndicator, ScrollView, StyleSheet, Text, Modal, TouchableOpacity } from 'react-native';
 
 import ProductImage from './components/ProductImage';
 import ProductDetails from './components/ProductDetails';
@@ -91,6 +92,10 @@ export default function ProductDetailPage() {
 
     return (
         <>
+            <TouchableOpacity onPress={router.back} style={styles.backButton}>
+                <Text style={styles.backButtonText}>← Voltar</Text>
+            </TouchableOpacity>
+
             <ScrollView contentContainerStyle={styles.container}>
                 <ProductImage product={product} />
 
@@ -120,5 +125,16 @@ const styles = StyleSheet.create({
     },
     container: {
         paddingBottom: 24,
+    },
+    backButton: {
+        padding: 12,
+        marginTop: 40,
+        marginLeft: 16,
+        alignSelf: 'flex-start',
+    },
+    backButtonText: {
+        fontSize: 16,
+        color: '#EA1D2C',
+        fontWeight: 'bold',
     },
 });

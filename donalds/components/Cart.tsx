@@ -34,8 +34,7 @@ export default function Cart({ setIsOpen }: CartProps) {
         setIsConfirmDialogOpen(false);
         setIsSubmitLoading(true);
 
-        // Mock de autenticação e criação de pedido
-        const userIsLoggedIn = true; // troque isso depois pelo seu auth real
+        const userIsLoggedIn = true;
 
         if (!userIsLoggedIn) {
             setIsLoginDialogOpen(true);
@@ -44,7 +43,6 @@ export default function Cart({ setIsOpen }: CartProps) {
         }
 
         try {
-            // Simula criação de pedido
             await new Promise((res) => setTimeout(res, 1000));
 
             clearCart();
@@ -67,6 +65,10 @@ export default function Cart({ setIsOpen }: CartProps) {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <TouchableOpacity onPress={() => setIsOpen(false)} style={styles.backButton}>
+                <Text style={styles.backButtonText}>← Voltar</Text>
+            </TouchableOpacity>
+
             {products.length > 0 ? (
                 <>
                     {products.map((product: any) => (
@@ -160,6 +162,15 @@ export default function Cart({ setIsOpen }: CartProps) {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
+    },
+    backButton: {
+        paddingVertical: 12,
+        marginBottom: 16,
+    },
+    backButtonText: {
+        fontSize: 16,
+        color: '#EA1D2C',
+        fontWeight: 'bold',
     },
     card: {
         marginTop: 20,

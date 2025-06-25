@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { View, Text, ActivityIndicator, FlatList, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, FlatList, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import ProductItem from '@/components/ProductItem';
 
@@ -65,6 +65,10 @@ export default function CategoryProducts() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <TouchableOpacity onPress={router.back} style={styles.backButton}>
+                <Text style={styles.backButtonText}>← Voltar</Text>
+            </TouchableOpacity>
+
             <Text style={styles.title}>{category.name}</Text>
 
             <FlatList
@@ -75,7 +79,7 @@ export default function CategoryProducts() {
                 contentContainerStyle={styles.productsList}
                 columnWrapperStyle={{ gap: 16 }}
                 ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-                scrollEnabled={false} 
+                scrollEnabled={false}
             />
         </ScrollView>
     );
@@ -90,6 +94,15 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         backgroundColor: '#fff',
+    },
+    backButton: {
+        paddingVertical: 12,
+        marginBottom: 8,
+    },
+    backButtonText: {
+        fontSize: 16,
+        color: '#EA1D2C',
+        fontWeight: 'bold',
     },
     title: {
         fontSize: 26,

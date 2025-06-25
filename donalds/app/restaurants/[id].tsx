@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { View, Text, Image, StyleSheet, ActivityIndicator, ScrollView, FlatList } from 'react-native';
+import { View, Text, Image, StyleSheet, ActivityIndicator, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
-import ProductItem from '@/components/ProductItem'; 
+import ProductItem from '@/components/ProductItem';
 
 interface Restaurant {
     id: string;
@@ -69,6 +69,10 @@ export default function RestaurantDetail() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <TouchableOpacity onPress={router.back} style={styles.backButton}>
+                <Text style={styles.backButtonText}>← Voltar</Text>
+            </TouchableOpacity>
+
             <Image source={{ uri: restaurant.imageUrl }} style={styles.image} />
             <View style={styles.infoContainer}>
                 <Text style={styles.title}>{restaurant.name}</Text>
@@ -76,7 +80,10 @@ export default function RestaurantDetail() {
                     Taxa de entrega:{' '}
                     {restaurant.deliveryFee === 0
                         ? 'Grátis'
-                        : restaurant.deliveryFee.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        : restaurant.deliveryFee.toLocaleString('pt-BR', {
+                              style: 'currency',
+                              currency: 'BRL',
+                          })}
                 </Text>
                 <Text style={styles.delivery}>Tempo de entrega: {restaurant.deliveryTimeMinutes} min</Text>
             </View>
@@ -106,6 +113,17 @@ const styles = StyleSheet.create({
     container: {
         paddingBottom: 20,
         backgroundColor: '#fff',
+    },
+    backButton: {
+        padding: 12,
+        marginTop: 40,
+        marginLeft: 16,
+        alignSelf: 'flex-start',
+    },
+    backButtonText: {
+        fontSize: 16,
+        color: '#EA1D2C',
+        fontWeight: 'bold',
     },
     image: {
         width: '100%',
